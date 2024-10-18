@@ -21,6 +21,8 @@ func TestProcessDocument(t *testing.T) {
 		setupDB     func(db *mocks.MockDatabase)
 		expectedErr error
 	}{
+		// Вообще на успешную обработку написать бы интеграционный тест. Чтобы поднималась база, и мы посмотрели:
+		// записалась ли обработка документа. Записалась ли она единожды. Что записались верные данные. И может быть еще что данные не перезаписали другие данные
 		{
 			name:     "Успешная обработка",
 			jsonData: []byte(`{"header": "Sample Header", "line_items": ["item1", "item2", "item3"]}`),
@@ -32,6 +34,7 @@ func TestProcessDocument(t *testing.T) {
 			},
 			expectedErr: nil,
 		},
+		// При тестировании логгера мы смотрим что логгер отдал верное сообщение. И что отдал он его единожды. Это касается и теста ниже
 		{
 			name:     "Неверный формат JSON",
 			jsonData: []byte(`{invalid-json}`),
@@ -54,6 +57,8 @@ func TestProcessDocument(t *testing.T) {
 			},
 			expectedErr: errors.New("validation error"),
 		},
+		// При ошибки базы тоже хорошо бы написать интеграционный тест.
+		// Надо посомтреть, что база не изменилась, что ничего лишнего не записалось и не удалилось, что ошибка была отдана единожды, ну и работу логгера аналогично тестам выше тоже проверить.
 		{
 			name:     "Ошибка базы данных",
 			jsonData: []byte(`{"header": "Sample Header", "line_items": ["item1", "item2", "item3"]}`),
